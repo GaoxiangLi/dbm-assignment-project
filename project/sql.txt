@@ -1,0 +1,189 @@
+1.
+SELECT subject.categoryname
+FROM subject,book,supplier
+WHERE subject.subjectid=book.subjectid
+AND book.supplierid=supplier.supplierid 
+AND supplier.companyname='supplier2'
+
+
+2.
+SELECT book.title,book.unitprice
+FROM book
+WHERE book.unitprice IN (SELECT MAX(book.unitprice)
+                        
+                           FROM supplier,book
+                          
+                           WHERE supplier.supplierid=book.supplierid
+                          
+                           AND  supplier.companyname='supplier3')
+
+
+3.
+SELECT DISTINCT book.title
+FROM book,orderdetail,customer,orders
+WHERE book.bookid=orderdetail.bookid
+AND orderdetail.orderid=orders.orderid
+AND orders.customerid=customer.customerid
+AND customer.lastname='lastname1'
+AND customer.firstname='firstname1'
+
+4.
+SELECT book.title
+FROM book
+WHERE book.quantity>10
+
+5.
+SELECT sum(book.unitprice) AS TotalPrice
+FROM customer,orders,orderdetail,book
+WHERE customer.customerid=orders.customerid
+AND orders.orderid=orderdetail.orderid
+AND orderdetail.bookid=book.bookid
+AND customer.lastname='lastname1'
+AND customer.firstname='firstname1'
+
+
+6.
+SELECT customer.firstname,customer.lastname
+FROM customer,orders,orderdetail,book
+WHERE customer.customerid=orders.customerid
+AND orders.orderid=orderdetail.orderid
+AND orderdetail.bookid=book.bookid
+group by customer.customerid
+Having 80>sum(book.unitprice)
+
+7.
+SELECT book.title
+FROM book,supplier
+WHERE supplier.companyname='supplier2'
+AND supplier.supplierid=book.supplierid
+
+8.
+SELECT sum(book.unitprice) AS TotalPrice,customer.lastname,customer.firstname
+FROM customer,book,orderdetail,orders
+WHERE customer.customerid=orders.customerid
+AND orders.orderid=orderdetail.orderid
+AND orderdetail.bookid=book.bookid
+GROUP BY customer.customerid
+order BY sum(book.unitprice) DESC
+
+9.
+SELECT book.title,shipper.shippername
+FROM book,shipper,orders,orderdetail
+WHERE book.bookid=orderdetail.bookid
+AND orderdetail.orderid=orders.orderid
+AND orders.shipperid=shipper.shipperid
+AND orders.shippeddate='8/4/2016'
+
+10.
+SELECT distinct  book.title
+FROM customer,book,orderdetail,orders
+WHERE customer.customerid=orders.customerid
+AND orders.orderid=orderdetail.orderid
+AND orderdetail.bookid=book.bookid
+AND customer.firstname='firstname1'
+AND customer.lastname='lastname1'
+
+UNION 
+
+SELECT distinct  book.title
+FROM customer,book,orderdetail,orders
+WHERE customer.firstname='firstname2'
+AND customer.lastname='lastname2'
+AND customer.customerid=orders.customerid
+AND orders.orderid=orderdetail.orderid
+AND orderdetail.bookid=book.bookid
+
+
+
+11.
+SELECT DISTINCT book.title
+FROM book,employee,orders,orderdetail
+WHERE book.bookid=orderdetail.bookid
+AND orderdetail.orderid=orders.orderid
+AND orders.employeeid=employee.employeeid
+AND employee.firstname='firstname6'
+AND employee.lastname='lastname6'
+
+12.
+SELECT DISTINCT book.title, book.quantity
+FROM book, orders, orderdetail
+WHERE orderdetail.bookid=book.bookid
+AND orders.orderid=orderdetail.orderid
+order BY book.quantity ASC
+
+
+13.
+SELECT DISTINCT customer.lastname,customer.firstname
+FROM orders,customer,orderdetail
+WHERE customer.customerid=orders.customerid
+AND orders.orderid=orderdetail.orderid
+GROUP BY orderdetail.orderid
+HAVING COUNT(*)>1
+
+14.
+SELECT S.firstname, S.lastname, B.title
+FROM book B, customer S,orders O,orderdetail OD, subject Sub
+WHERE B.subjectid=Sub.subjectid
+AND B.bookid=OD.bookid
+AND OD.orderid=O.orderid
+AND O.customerid=S.customerid
+AND Sub.categoryname='category3'
+
+
+
+UNION 
+SELECT customer.firstname,customer.lastname,book.title
+FROM book,customer,orders,orderdetail,subject
+WHERE book.subjectid=subject.subjectid
+AND book.bookid=orderdetail.bookid
+AND orderdetail.orderid=orders.orderid
+AND orders.customerid=customer.customerid
+AND subject.categoryname='category4'
+
+
+15.
+SELECT DISTINCT customer.firstname,customer.lastname
+FROM book,orders,customer,orderdetail
+WHERE book.bookid=orderdetail.bookid
+AND book.author='author1'
+AND orderdetail.orderid=orders.orderid
+AND customer.customerid=orders.customerid
+
+16.
+SELECT employee.firstname,employee.lastname,sum(book.unitprice) AS TotalPrice
+FROM book,orders,orderdetail,employee
+WHERE book.bookid=orderdetail.bookid
+AND orderdetail.orderid=orders.orderid
+AND orders.employeeid=employee.employeeid
+GROUP BY employee.employeeid
+
+17.
+SELECT book.title,book.quantity
+FROM book,orders,orderdetail
+WHERE book.bookid=orderdetail.bookid
+AND orderdetail.orderid=orders.orderid
+AND orders.shippeddate<'8/4/2016'
+
+18.
+SELECT customer.firstname,customer.lastname,sum(orderdetail.quantity) AS Quantity
+FROM book,customer,orders,orderdetail
+WHERE book.bookid=orderdetail.bookid
+AND orderdetail.orderid=orders.orderid
+AND orders.customerid=customer.customerid
+GROUP BY customer.customerid
+HAVING sum(orderdetail.quantity)>1
+orders BY Quantity DESC
+
+19.
+SELECT customer.firstname,customer.lastname,customer.phone
+FROM book,customer,orders,orderdetail
+WHERE book.bookid=orderdetail.bookid
+AND orderdetail.orderid=orders.orderid
+AND orders.customerid=customer.customerid
+GROUP BY customer.customerid
+HAVING COUNT(*)>3
+
+
+
+
+
